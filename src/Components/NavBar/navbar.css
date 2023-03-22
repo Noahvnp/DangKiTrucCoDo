@@ -1,0 +1,51 @@
+.navbar-container{
+    display: flex;
+    padding: 1rem 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #0C315D;
+}
+.navbar-container > *{
+    margin: 0 1.25rem;
+    font-weight: 600;
+    color:rgb(0, 99, 230);
+}
+.navbar-home, 
+.navbar-register,
+.navbar-login{
+    color: #fff;
+}
+
+.navbar-logo {
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.navbar-logo > b {
+    color: #fff;
+    margin: auto 2rem;
+}
+
+.logo_img {
+    width: 100px;
+    height: 100px;
+}
+
+.navbar-links {
+    display: flex;
+}
+
+.navbar-links > * {
+    margin-left: 3rem;
+    text-decoration: none;
+}
+
+.navbar-user{
+    color: rgb(0, 154, 165);
+}
+.navbar-logout {
+    color:rgb(156, 156, 156);
+    padding:0.35rem;
+}
+
