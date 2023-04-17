@@ -1,17 +1,6 @@
 import axios from "axios";
 import jwt_decode from "jwt-decode";
 
-// const refreshToken = async () => {
-//     try {
-//         const res = await axios.post("/v1/auth/refresh", {
-//             withCredentials: true,
-//         });
-//         return res.data;
-//     } catch (err) {
-//         console.log(err);
-//     }
-// };
-
 const refreshToken = async () => {
     try {
       const res = await axios.post("/v1/auth/refresh", {

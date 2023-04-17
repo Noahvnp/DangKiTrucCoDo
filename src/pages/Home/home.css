@@ -1,8 +1,7 @@
 .home-container{
     display: flex;
     background-color: rgb(236, 235, 235);
-    height:600px;
-    width:60%;
+    width:80%;
     text-align: center;
     align-items: center;
     flex-direction: column;
