@@ -2,7 +2,10 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../redux/apiRequest";
+
+import Button from 'react-bootstrap/Button';
 import "./register.css";
+
 const Register = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
@@ -44,7 +47,7 @@ const Register = () => {
           placeholder="Nhập mật khẩu"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit"> Tạo tài khoản </button>
+        <Button variant="primary" type="submit"> Tạo tài khoản </Button>
       </form>
     </section>
   );

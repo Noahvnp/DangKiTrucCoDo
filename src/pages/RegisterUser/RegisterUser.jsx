@@ -12,7 +12,7 @@ const RegisterUser = ({ accessToken, jwt, id }) => {
   const [name, setName] = useState("");
   const [mssv, setMssv] = useState("");
   const [email, setEmail] = useState("");
-  const [date, setDate] = useState("");
+  const [date, setDate] = useState();
   const [shift, setShift] = useState("");
 
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const RegisterUser = ({ accessToken, jwt, id }) => {
       name,
       mssv,
       email,
-      register_date: new Date(date).toISOString(),
+      register_date: date.toISOString(),
       shift,
     };
     register(accessToken, newUser, dispatch, id, navigate, jwt);
@@ -37,7 +37,7 @@ const RegisterUser = ({ accessToken, jwt, id }) => {
 
   return (
     <>
-      <Button variant="primary" onClick={handleShow}>
+      <Button variant="primary mb-4" onClick={handleShow}>
         Đăng ký trực cờ đỏ
       </Button>
 
@@ -79,7 +79,8 @@ const RegisterUser = ({ accessToken, jwt, id }) => {
               <Form.Label>Ngày trực</Form.Label>
               <Form.Control
                 type="date"
-                onChange={(e) => setDate(e.target.value)}
+                value={date}
+                onChange={(e) => setDate(new Date(e.target.value))}
               />
             </Form.Group>
             <Form.Group className="mb-3">

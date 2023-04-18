@@ -6,9 +6,7 @@ import "./home.css";
 import RegisterUser from "../RegisterUser/RegisterUser";
 import RegisteredTable from "../../Components/RegisteredTable/RegisteredTable";
 
-import {
-  getAllRegisteredUser,
-} from "../../redux/apiRequest";
+import { getAllRegisteredUser } from "../../redux/apiRequest";
 import { createAxios } from "../../createInstance";
 import { loginSuccess } from "../../redux/authSlice";
 
@@ -39,7 +37,11 @@ const HomePage = () => {
           id={user?._id}
         ></RegisterUser>
       ) : null}
-      <RegisteredTable></RegisteredTable>
+      <RegisteredTable
+        accessToken={user?.accessToken}
+        jwt={axiosJWT}
+        user={user}
+      ></RegisteredTable>
     </main>
   );
 };

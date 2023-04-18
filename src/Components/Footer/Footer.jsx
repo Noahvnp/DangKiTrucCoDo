@@ -2,7 +2,7 @@ import React from "react";
 import "./footer.css";
 
 const Footer = () => (
-  <footer className="page-footer font-small blue pt-4 text-light">
+  <footer className="page-footer font-small blue mt-4 pt-4 text-light">
     <div className="container-fluid text-center text-md-left footer-container pt-4">
       <div className="row">
         <div className="col-md-6 mt-md-0 mt-3">
@@ -18,46 +18,16 @@ const Footer = () => (
 
         <div className="col-md mb-md-0 mb-3">
           <h3 className="pt-3">Trường Công nghệ Thông tin & Truyền Thông</h3>
-          <p className="f">
-            Khu 2, đường 3/2, Phường Xuân Khánh, Q. Ninh Kiều, TP. Cần Thơ, Việt
-            Nam
-          </p>
-          {/* <h5 className="text-uppercase">Links</h5>
-          <ul className="list-unstyled">
-            <li>
-              <a href="#!">Link 1</a>
-            </li>
-            <li>
-              <a href="#!">Link 2</a>
-            </li>
-            <li>
-              <a href="#!">Link 3</a>
-            </li>
-            <li>
-              <a href="#!">Link 4</a>
-            </li>
-          </ul> */}
+          <small className="ml-0">
+            Khu 2, đường 3/2, Phường Xuân Khánh, Q. Ninh Kiều, TP. Cần Thơ, Việt Nam
+            <br />
+            Điện thoại: 84 0292 3 734713 - 0292 3 831301
+            <br />
+            Fax: 84 0292 3830841; Email: office@cit.ctu.edu.vn
+          </small>
         </div>
-
-        {/* <div className="col-md-3 mb-md-0 mb-3">
-          <h5 className="text-uppercase">Links</h5>
-          <ul className="list-unstyled">
-            <li>
-              <a href="#!">Link 1</a>
-            </li>
-            <li>
-              <a href="#!">Link 2</a>
-            </li>
-            <li>
-              <a href="#!">Link 3</a>
-            </li>
-            <li>
-              <a href="#!">Link 4</a>
-            </li>
-          </ul>
-        </div> */}
       </div>
-      <div className="footer-copyright text-center p-3">
+      <div className="footer-copyright text-center mt-4 p-3">
         © 2023 Đại học Cần Thơ
       </div>
     </div>

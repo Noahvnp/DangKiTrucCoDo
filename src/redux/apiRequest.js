@@ -25,6 +25,9 @@ import {
   getRegisteredListFailure,
   getRegisteredListStart,
   getRegisteredListSuccess,
+  deleteStart,
+  deleteSuccess,
+  deleteFailure,
 } from "./registeredUserSlice";
 
 export const loginUser = async (user, dispatch, navigate) => {
@@ -122,16 +125,16 @@ export const register = async (accessToken, user, dispatch, id, navigate, axiosJ
   }
 };
 
-export const deletee = async (accessToken, dispatch, id, axiosJWT) => {
-  dispatch(deleteUserStart());
+export const deleteRegisterUser = async (accessToken, dispatch, id, axiosJWT) => {
+  dispatch(deleteStart());
   try {
-    const res = await axiosJWT.delete("/v1/user/" + id, {
+    const res = await axiosJWT.delete("/v1/register/" + id +"/delete", {
       headers: {
         token: `Bearer ${accessToken}`,
       },
     });
-    dispatch(deleteUserSuccess(res.data));
+    dispatch(deleteSuccess(res.data));
   } catch (err) {
-    dispatch(deleteUserFailure(err.response.data));
+    dispatch(deleteFailure(err.response.data));
   }
 };

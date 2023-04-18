@@ -42,19 +42,19 @@ const registeredUserSlice = createSlice({
       state.registeredList.isFetching = false;
       state.registeredList.error = true;
     },
-    // // delete user
-    // deleteUserStart: (state) => {
-    //     state.users.isFetching = true;
-    // },
-    // deleteUserSuccess: (state, action) => {
-    //     state.users.isFetching = false;
-    //     state.msg = action.payload;
-    // },
-    // deleteUserFailure: (state, action) => {
-    //     state.users.isFetching = false;
-    //     state.users.error = true;
-    //     state.msg = action.payload;
-    // }
+    // delete user
+    deleteStart: (state) => {
+      state.registerUser.isFetching = true;
+    },
+    deleteSuccess: (state, action) => {
+      state.registerUser.isFetching = false;
+      state.msg = action.payload;
+    },
+    deleteFailure: (state, action) => {
+      state.registerUser.isFetching = false;
+      state.registerUser.error = true;
+      state.msg = action.payload;
+    },
   },
 });
 
@@ -65,6 +65,9 @@ export const {
   registerUserStart,
   registerUserSuccess,
   registerUserFailure,
+  deleteStart,
+  deleteSuccess,
+  deleteFailure,
 } = registeredUserSlice.actions;
 
 export default registeredUserSlice.reducer;

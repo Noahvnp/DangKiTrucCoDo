@@ -1,8 +1,11 @@
-import "./login.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { loginUser } from "../../redux/apiRequest";
 import { useDispatch } from "react-redux";
+
+import Button from 'react-bootstrap/Button';
+import "./login.css";
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +37,7 @@ const Login = () => {
           placeholder="Nhập vào mật khẩu"
           onChange={(e) => setPassword(e.target.value)}
         />
-        <button type="submit"> Đăng nhập </button>
+        <Button variant="primary" type="submit"> Đăng nhập </Button>
       </form>
       <div className="login-register">Chưa có tài khoản? </div>
       <Link className="login-register-link" to="/register">
