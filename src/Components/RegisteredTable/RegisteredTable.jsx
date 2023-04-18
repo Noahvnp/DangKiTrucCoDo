@@ -18,6 +18,7 @@ const RegisteredTable = () => {
     setTableData([...tableData]);
   };
 
+  const admin = useSelector((state) => state.auth.login?.currentUser?.admin);
   const registeredTable = useSelector(
     (state) => state.registeredUser?.registeredList.allRegisteredList
   );
@@ -31,31 +32,36 @@ const RegisteredTable = () => {
     })();
   }, []);
 
-
   const columns = useMemo(() => COLUMNS, []);
 
   return (
     <>
-      <MaterialReactTable
-        columns={columns}
-        data={data}
-        editingMode="modal"
-        enableEditing
-        renderRowActions={({ row, table }) => (
-          <Box sx={{ display: "flex", gap: "0.2rem" }}>
-            <Tooltip arrow placement="left" title="Edit">
-              <IconButton onClick={() => table.setEditingRow(row)}>
-                <Edit />
-              </IconButton>
-            </Tooltip>
-            <Tooltip arrow placement="right" title="Delete">
-              <IconButton color="error">
-                <Delete />
-              </IconButton>
-            </Tooltip>
-          </Box>
-        )}
-        renderTopToolbarCustomActions={() => (
+      {admin ? (
+        <MaterialReactTable
+          columns={columns}
+          data={data}
+          editingMode="modal"
+          enableEditing
+          renderRowActions={({ row, table }) => (
+            <Box sx={{ display: "flex", gap: "0.2rem" }}>
+              <Tooltip arrow placement="left" title="Edit">
+                <IconButton onClick={() => table.setEditingRow(row)}>
+                  <Edit />
+                </IconButton>
+              </Tooltip>
+              <Tooltip arrow placement="right" title="Delete">
+                <IconButton color="error">
+                  <Delete />
+                </IconButton>
+              </Tooltip>
+            </Box>
+          )}
+        />
+      ) : (
+        <MaterialReactTable columns={columns} data={data} />
+      )}
+
+      {/* renderTopToolbarCustomActions={() => (
           <Button
             color="secondary"
             variant="contained"
@@ -65,12 +71,12 @@ const RegisteredTable = () => {
           </Button>
         )}
       />
-      <CreateNewAccountModal 
+      <CreateNewAccountModal
         columns={columns}
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
         onSubmit={handleCreateNewRow}
-      />
+      /> */}
     </>
   );
 };

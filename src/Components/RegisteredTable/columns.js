@@ -36,6 +36,9 @@ const COLUMNS = [
     header: "Điểm danh",
     accessorKey: "attendance",
     size: 20,
+    Cell: ({cell}) => {
+      if(cell.getValue() === false) return 'Chưa điểm danh';
+    }
   },
   {
     header: "BCH Phụ Trách",
