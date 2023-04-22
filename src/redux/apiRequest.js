@@ -99,25 +99,29 @@ export const getAllRegisteredUser = async (dispatch, axiosJWT) => {
   dispatch(getRegisteredListStart());
   try {
     const res = await axiosJWT.get("/v1/register/list");
-    dispatch(getRegisteredListSuccess(res.data));
+    const result = await res.json;
+    dispatch(getRegisteredListSuccess(result));
+    return result;
   } catch (err) {
     dispatch(getRegisteredListFailure());
   }
 };
 
-export const register = async (accessToken, user, dispatch, id, navigate, axiosJWT) => {
+export const register = async (
+  accessToken,
+  user,
+  dispatch,
+  id,
+  navigate,
+  axiosJWT
+) => {
   dispatch(registerUserStart());
   try {
-    console.log(user);
-    await axiosJWT.post(
-      "/v1/register/signup/" + id,
-      user,
-      {
-        headers: {
-          token: `Bearer ${accessToken}`,
-        },
-      }
-    );
+    await axiosJWT.post("/v1/register/signup/" + id, user, {
+      headers: {
+        token: `Bearer ${accessToken}`,
+      },
+    });
     dispatch(registerUserSuccess());
     navigate("/");
   } catch (err) {
@@ -125,10 +129,35 @@ export const register = async (accessToken, user, dispatch, id, navigate, axiosJ
   }
 };
 
-export const deleteRegisterUser = async (accessToken, dispatch, id, axiosJWT) => {
+export const updateRegisterUser = async (
+  accessToken,
+  user,
+  dispatch,
+  id,
+  navigate,
+  axiosJWT
+) => {
+  try {
+    await axiosJWT.post("/v1/register/" + id + "/update", user, {
+      headers: {
+        token: `Bearer ${accessToken}`,
+      },
+    });
+    navigate("/");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const deleteRegisterUser = async (
+  accessToken,
+  dispatch,
+  id,
+  axiosJWT
+) => {
   dispatch(deleteStart());
   try {
-    const res = await axiosJWT.delete("/v1/register/" + id +"/delete", {
+    const res = await axiosJWT.delete("/v1/register/" + id + "/delete", {
       headers: {
         token: `Bearer ${accessToken}`,
       },
@@ -136,5 +165,15 @@ export const deleteRegisterUser = async (accessToken, dispatch, id, axiosJWT) =>
     dispatch(deleteSuccess(res.data));
   } catch (err) {
     dispatch(deleteFailure(err.response.data));
+  }
+};
+
+export const fetchData = async () => {
+  try {
+    const { data: response } = await axios.get("/v1/register/list");
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error(error);
   }
 };

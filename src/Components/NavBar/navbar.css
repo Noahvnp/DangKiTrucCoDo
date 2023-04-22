@@ -19,7 +19,7 @@
 .navbar-logo {
     display: flex;
     justify-content: space-between;
-
+    overflow: hidden;
 }
 
 .navbar-logo > b {

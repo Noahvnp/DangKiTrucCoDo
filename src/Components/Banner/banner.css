@@ -5,3 +5,7 @@
     margin-bottom: 0.2rem;
     width: 1000px;
 }
+
+Image{
+    overflow: hidden !important;
+}

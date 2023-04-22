@@ -12,7 +12,6 @@ import { loginSuccess } from "../../redux/authSlice";
 
 const HomePage = () => {
   const user = useSelector((state) => state.auth.login?.currentUser);
-  // const userList = useSelector((state) => state.user.users?.allUsers);
   const registeredTable = useSelector(
     (state) => state.registeredUser?.registeredList.allRegisteredList
   );
