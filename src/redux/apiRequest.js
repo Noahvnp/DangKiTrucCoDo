@@ -167,13 +167,3 @@ export const deleteRegisterUser = async (
     dispatch(deleteFailure(err.response.data));
   }
 };
-
-export const fetchData = async () => {
-  try {
-    const { data: response } = await axios.get("/v1/register/list");
-    console.log(response);
-    return response;
-  } catch (error) {
-    console.error(error);
-  }
-};

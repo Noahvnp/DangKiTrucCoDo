@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useMemo, useEffect, useState } from "react";
+import React, { useCallback, useMemo, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -11,67 +11,63 @@ import FileDownloadIcon from "@mui/icons-material/FileDownload";
 import { format } from "date-fns";
 import "./registeredTable.css";
 
-import  UpdateRegisterUser  from "../UpdateRegisterUser/UpdateRegisterUser" 
+import RegisterUser from "../RegisterUser/RegisterUser";
 
 import {
   updateRegisterUser,
   deleteRegisterUser,
-  fetchData,
 } from "../../redux/apiRequest";
 import COLUMNS from "./columns";
 
 const RegisteredTable = ({ accessToken, jwt, user }) => {
+  // const [data, setData] = useState([]);
   const [data, setData] = useState([]);
+  const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isRefetching, setIsRefetching] = useState(false);
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!data.length) {
+        setIsLoading(true);
+      } else {
+        setIsRefetching(true);
+      }
+
       try {
         const { data: response } = await axios.get("/v1/register/list");
         setData(response);
       } catch (error) {
+        setIsError(true);
         console.error(error);
       }
     };
-
+    setIsError(false);
+    setIsLoading(false);
+    setIsRefetching(false);
     fetchData();
   }, []);
 
   const columns = useMemo(() => COLUMNS, []);
 
-  const csvOptions = {
-    fieldSeparator: ",",
-    quoteStrings: '"',
-    decimalSeparator: ".",
-    showLabels: true,
-    useBom: true,
-    useKeysAsHeaders: false,
-    headers: columns.map((c) => c.header),
-  };
-
-  // const csvExporter = new ExportToCsv(csvOptions);
-
-  // const handleExportRows = (rows) => {
-  //   console.log(rows);
-  //   // csvExporter.generateCsv(rows.map((row) => row.original));
-  // };
-
-  // const handleExportData = () => {
-  //   csvExporter.generateCsv(data);
-  // };
-
   const handleSaveRowEdits = async ({ exitEditingMode, row, values }) => {
     // if (!Object.keys(validationErrors).length) {
     data[row.index] = values;
     //send/receive api updates here, then refetch or update local table data for re-render
-    // setTableData([...tableData]);
-    console.log(data[row.index]);
-    console.log(row);
-    console.log(values);
 
-    // updateRegisterUser(accessToken, values, dispatch, values._id, navigate, jwt);
+    updateRegisterUser(
+      accessToken,
+      values,
+      dispatch,
+      values._id,
+      navigate,
+      jwt
+    );
+
+    setData([...data]);
     exitEditingMode(); //required to exit editing mode and close modal
   };
 
@@ -90,119 +86,134 @@ const RegisteredTable = ({ accessToken, jwt, user }) => {
     ) {
       return;
     }
+
     //send api delete request here, then refetch or update local table data for re-render
-    deleteRegisterUser(accessToken, dispatch, user._id, jwt);
+    deleteRegisterUser(accessToken, dispatch, row.original._id, jwt);
+
   };
 
   return (
     <>
       {user ? (
         user.admin ? (
-          <MaterialReactTable
-            columns={columns}
-            data={data}
-            enableStickyHeader
-            enableGrouping
-            enableGlobalFilterModes
-            initialState={{
-              showGlobalFilter: true,
-              columnVisibility: { _id: false },
-              density: "compact",
-              expanded: true,
-              grouping: ["week"],
-            }}
-            positionGlobalFilter="left"
-            muiSearchTextFieldProps={{
-              placeholder: `Tìm kiếm...`,
-              sx: { minWidth: "300px", padding: "8px" },
-              variant: "standard",
-            }}
-            editingMode="modal"
-            enableEditing
-            onEditingRowSave={handleSaveRowEdits}
-            muiTableBodyCellEditTextFieldProps={({ cell }) => ({
-              //onBlur is more efficient, but could use onChange instead
-              onBlur: (event) => {
-                // handleSaveCell(cell, event.target.value);
-              },
-            })}
-            renderRowActions={({ row, table }) => (
-              <Box sx={{ display: "flex", gap: "0.2rem" }}>
-                <Tooltip arrow placement="left" title="Chỉnh sửa">
-                  <IconButton
-                    sx={{ maxWidth: "20px" }}
-                    onClick={() => table.setEditingRow(row)}
-                  >
-                    <Edit />
-                  </IconButton>
-                  {/* <UpdateRegisterUser data={row} /> */}
-                </Tooltip>
-                <Tooltip arrow placement="right" title="Xóa">
-                  <IconButton
-                    color="error"
-                    onClick={() => handleDeleteRow(row)}
-                  >
-                    <Delete />
-                  </IconButton>
-                </Tooltip>
-              </Box>
-            )}
-            // renderBottomToolbarCustomActions={({ table, row, values }) => (
-            //   <Box
-            //     sx={{
-            //       display: "flex",
-            //       gap: "1rem",
-            //       p: "0.5rem",
-            //       flexWrap: "wrap",
-            //     }}
-            //   >
-            //     <Button
-            //       color="primary"
-            //       //export all data that is currently in the table (ignore pagination, sorting, filtering, etc.)
-            //       onClick={handleExportData}
-            //       startIcon={<FileDownloadIcon />}
-            //       variant="contained"
-            //     >
-            //       Export All Data
-            //     </Button>
-            //     <Button
-            //       disabled={table.getPrePaginationRowModel().rows.length === 0}
-            //       //export all rows, including from the next page, (still respects filtering and sorting)
-            //       onClick={() =>
-            //         // handleExportRows(table.getPrePaginationRowModel().rows)
-            //         console.log(table.getState())
-            //       }
-            //       startIcon={<FileDownloadIcon />}
-            //       variant="contained"
-            //     >
-            //       Export All Rows
-            //     </Button>
-            //   </Box>
-            // )}
-          />
+          <>
+            <RegisterUser
+              accessToken={user?.accessToken}
+              jwt={jwt}
+              id={user?._id}
+            />
+            <MaterialReactTable
+              columns={columns}
+              data={data}
+              enableStickyHeader
+              enableGrouping
+              enableGlobalFilterModes
+              initialState={{
+                isLoading,
+                showGlobalFilter: true,
+                columnVisibility: { _id: false },
+                showProgressBars: isRefetching,
+                density: "compact",
+                expanded: true,
+                grouping: ["week"],
+                sorting: [
+                  { id: "week", desc: false },
+                  { id: "register_date", desc: false },
+                  { id: "shift", desc: true },
+                ],
+              }}
+              positionGlobalFilter="left"
+              muiSearchTextFieldProps={{
+                placeholder: `Tìm kiếm...`,
+                sx: { minWidth: "300px", padding: "8px" },
+                variant: "standard",
+              }}
+              editingMode="modal"
+              enableEditing
+              onEditingRowSave={handleSaveRowEdits}
+              muiTableBodyCellEditTextFieldProps={({ cell }) => ({
+                //onBlur is more efficient, but could use onChange instead
+                onBlur: (event) => {
+                  // handleSaveCell(cell, event.target.value);
+                },
+              })}
+              renderRowActions={({ row, table }) => (
+                <Box sx={{ display: "flex", gap: "0.2rem" }}>
+                  <Tooltip arrow placement="left" title="Chỉnh sửa">
+                    <IconButton
+                      sx={{ maxWidth: "20px" }}
+                      onClick={() => table.setEditingRow(row)}
+                    >
+                      <Edit />
+                    </IconButton>
+                    {/* <UpdateRegisterUser data={row} /> */}
+                  </Tooltip>
+                  <Tooltip arrow placement="right" title="Xóa">
+                    <IconButton
+                      color="error"
+                      onClick={() => handleDeleteRow(row)}
+                    >
+                      <Delete />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              )}
+            />
+          </>
         ) : (
-          <MaterialReactTable
-            columns={columns}
-            data={data}
-            initialState={{
-              showGlobalFilter: true,
-              columnVisibility: { _id: false },
-            }}
-            positionGlobalFilter="left"
-            muiSearchTextFieldProps={{
-              placeholder: `Tìm kiếm...`,
-              sx: { minWidth: "300px" },
-              variant: "outlined",
-            }}
-          />
+          <>
+            <RegisterUser
+              accessToken={user?.accessToken}
+              jwt={jwt}
+              id={user?._id}
+            />
+            <MaterialReactTable
+              columns={columns}
+              data={data}
+              enableStickyHeader
+              enableGrouping
+              initialState={{
+                isLoading,
+                showGlobalFilter: true,
+                columnVisibility: { _id: false },
+                showProgressBars: isRefetching,
+                density: "compact",
+                expanded: true,
+                grouping: ["week"],
+                sorting: [
+                  { id: "week", desc: false },
+                  { id: "register_date", desc: false },
+                  { id: "shift", desc: true },
+                ],
+              }}
+              positionGlobalFilter="left"
+              muiSearchTextFieldProps={{
+                placeholder: `Tìm kiếm...`,
+                sx: { minWidth: "300px" },
+                variant: "outlined",
+              }}
+            />
+          </>
         )
       ) : (
         <MaterialReactTable
           columns={columns}
           data={data}
+          enableStickyHeader
+          enableGrouping
           initialState={{
+            isLoading,
             showGlobalFilter: true,
             columnVisibility: { _id: false },
+            showProgressBars: isRefetching,
+            density: "compact",
+            expanded: true,
+            grouping: ["week"],
+            sorting: [
+              { id: "week", desc: false },
+              { id: "register_date", desc: false },
+              { id: "shift", desc: true },
+            ],
           }}
           positionGlobalFilter="left"
           muiSearchTextFieldProps={{
