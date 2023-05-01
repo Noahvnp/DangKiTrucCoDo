@@ -6,7 +6,7 @@ import Modal from "react-bootstrap/Modal";
 import { format } from "date-fns";
 import DayToWeek from "../../Helper/DayToWeek";
 
-import { register } from "../../redux/apiRequest";
+import { register, sendMail } from "../../redux/apiRequest";
 import { useDispatch } from "react-redux";
 
 const RegisterUser = ({ accessToken, jwt, id }) => {
@@ -34,6 +34,8 @@ const RegisterUser = ({ accessToken, jwt, id }) => {
       week: DayToWeek(date)
     };
     register(accessToken, newUser, dispatch, id, navigate, jwt);
+    sendMail(newUser, navigate, jwt);
+
     handleClose();
   };
 

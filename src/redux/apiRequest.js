@@ -167,3 +167,12 @@ export const deleteRegisterUser = async (
     dispatch(deleteFailure(err.response.data));
   }
 };
+
+export const sendMail = async(user, navigate, axiosJWT) => {
+  try {
+    await axios.post("/v1/sendmail", user);
+    navigate("/");
+  } catch (err) {
+    console.log(err);
+  }
+}
