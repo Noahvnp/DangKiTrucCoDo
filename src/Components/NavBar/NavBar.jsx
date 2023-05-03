@@ -45,6 +45,10 @@ const NavBar = () => {
                   {" "}
                   Trang Chủ{" "}
                 </Link>
+                <Link to="/about" className="navbar-home">
+                  {" "}
+                  Giới thiệu{" "}
+                </Link>
                 {user ? (
                   <>
                     <p className="navbar-user">

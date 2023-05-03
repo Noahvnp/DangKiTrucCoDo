@@ -1,28 +1,23 @@
 import axios from "axios";
-import React, { useCallback, useMemo, useEffect, useState } from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import React, { useMemo, useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
 import MaterialReactTable from "material-react-table";
-import { Box, IconButton, Tooltip, Typography, Button } from "@mui/material";
+import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { Delete, Edit } from "@mui/icons-material";
-import FileDownloadIcon from "@mui/icons-material/FileDownload";
 
 import { format } from "date-fns";
 import "./registeredTable.css";
 
 import RegisterUser from "../RegisterUser/RegisterUser";
 
-import {
-  updateRegisterUser,
-  deleteRegisterUser,
-} from "../../redux/apiRequest";
+import { updateRegisterUser, deleteRegisterUser } from "../../redux/apiRequest";
 import COLUMNS from "./columns";
 
 const RegisteredTable = ({ accessToken, jwt, user }) => {
   // const [data, setData] = useState([]);
   const [data, setData] = useState([]);
-  const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isRefetching, setIsRefetching] = useState(false);
 
@@ -41,14 +36,13 @@ const RegisteredTable = ({ accessToken, jwt, user }) => {
         const { data: response } = await axios.get("/v1/register/list");
         setData(response);
       } catch (error) {
-        setIsError(true);
         console.error(error);
       }
     };
-    setIsError(false);
     setIsLoading(false);
     setIsRefetching(false);
     fetchData();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const columns = useMemo(() => COLUMNS, []);
@@ -66,7 +60,7 @@ const RegisteredTable = ({ accessToken, jwt, user }) => {
       navigate,
       jwt
     );
-
+    console.log(values);
     setData([...data]);
     exitEditingMode(); //required to exit editing mode and close modal
   };
@@ -86,10 +80,10 @@ const RegisteredTable = ({ accessToken, jwt, user }) => {
     ) {
       return;
     }
-
+    console.log(row.original);
     //send api delete request here, then refetch or update local table data for re-render
     deleteRegisterUser(accessToken, dispatch, row.original._id, jwt);
-
+    window.location.reload(false);
   };
 
   return (
@@ -112,10 +106,11 @@ const RegisteredTable = ({ accessToken, jwt, user }) => {
                 isLoading,
                 showGlobalFilter: true,
                 columnVisibility: { _id: false },
+                pagination: { pageSize: 100 },
                 showProgressBars: isRefetching,
                 density: "compact",
                 expanded: true,
-                grouping: ["week"],
+                grouping: ["week", "register_date"],
                 sorting: [
                   { id: "week", desc: false },
                   { id: "register_date", desc: false },
@@ -176,10 +171,11 @@ const RegisteredTable = ({ accessToken, jwt, user }) => {
                 isLoading,
                 showGlobalFilter: true,
                 columnVisibility: { _id: false },
+                pagination: { pageSize: 100 },
                 showProgressBars: isRefetching,
                 density: "compact",
                 expanded: true,
-                grouping: ["week"],
+                grouping: ["week", "register_date"],
                 sorting: [
                   { id: "week", desc: false },
                   { id: "register_date", desc: false },
@@ -205,10 +201,11 @@ const RegisteredTable = ({ accessToken, jwt, user }) => {
             isLoading,
             showGlobalFilter: true,
             columnVisibility: { _id: false },
+            pagination: { pageSize: 100 },
             showProgressBars: isRefetching,
             density: "compact",
             expanded: true,
-            grouping: ["week"],
+            grouping: ["week", "register_date"],
             sorting: [
               { id: "week", desc: false },
               { id: "register_date", desc: false },

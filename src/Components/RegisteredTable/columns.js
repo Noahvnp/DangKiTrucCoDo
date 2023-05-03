@@ -1,13 +1,12 @@
-import { format, parse } from "date-fns";
-import Select from "react-select";
+import { format } from "date-fns";
 
 import { Box, MenuItem } from "@mui/material";
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 
 const shifts = [
-    { value: "sáng", label: "Sáng" },
-    { value: "chiều", label: "Chiều" },
+  { value: "sáng", label: "Sáng" },
+  { value: "chiều", label: "Chiều" },
 ];
 
 const attendanceStat = [
@@ -27,6 +26,7 @@ const COLUMNS = [
     accessorKey: "week",
     size: 10,
     enableEditing: false,
+    Edit: ({ cell }) => <></>,  
     GroupedCell: ({ cell, row }) => (
       <Box sx={{ color: "primary.main" }}>
         <strong>{`Tuần ${cell.getValue()}`} </strong>
@@ -34,10 +34,10 @@ const COLUMNS = [
     ),
   },
   {
-    header: "Thứ",
+    header: "Ngày",
     accessorKey: "register_date",
     size: 120,
-    Cell: ({ cell }) => 
+    Cell: ({ cell }) =>
       format(new Date(cell.getValue()), "EEEE") + " " + cell.getValue(),
     Edit: ({ cell }) => (
       <>
@@ -50,45 +50,49 @@ const COLUMNS = [
           >
             Ngày trực
           </label>
-          <div class="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-l4u8b9-MuiInputBase-root-MuiInput-root">
-            <input
-              aria-invalid="false"
-              name="register_date"
-              placeholder="Ngày trực"
-              type="date"
-              class="MuiInputBase-input MuiInput-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
-              defaultValue={format(new Date(cell.getValue()), "yyyy-MM-dd")}
-              onChange={(e) => {
-                console.log(e.target.value);
-                return e.target.value;
-              }}
-              id="mui-100"
-            ></input>
+          <div class="MuiInputBase-root MuiInput-root MuiInputBase-colorPrimary css-l4u8b9-MuiInputBase-root-MuiInput-root">
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                format="MM/dd/yyyy"
+                value={new Date(cell.getValue())}
+                onChange={(date) => {
+                  const value = new Date(date).toLocaleDateString()
+                  return value
+                }}
+                clearable
+                InputProps={{
+                  style: {
+                    fontSize: 13,
+                  },
+                }}
+              />
+            </LocalizationProvider>
           </div>
         </div>
       </>
     ),
-
-    // Edit: ({ props }) => { return (
-    //   <LocalizationProvider dateAdapter={AdapterDateFns}>
-    //     <DatePicker
-    //       format="MM/dd/yyyy"
-    //       // value={format(new Date(props.getValue()), "yyyy-MM-dd") || null}
-    //       onChange= {(e, {props}) => console.log(e)}
-    //       clearable
-    //       InputProps={{
-    //         style: {
-    //           fontSize: 13,
-    //         },
-    //       }}
-    //     />
-    //   </LocalizationProvider>
-    // )}, 
   },
   {
     header: "Ca",
     accessorKey: "shift",
     size: 10,
+    Cell: ({ cell }) => (
+      <Box
+        component="span"
+        sx={(theme) => ({
+          backgroundColor:
+            cell.getValue() === "sáng"
+              ? theme.palette.error.dark
+              : theme.palette.success.dark,
+          borderRadius: "0.25rem",
+          color: "#fff",
+          maxWidth: "9ch",
+          p: "0.4rem",
+        })}
+      >
+        {cell.getValue()}
+      </Box>
+    ),
     muiTableBodyCellEditTextFieldProps: {
       select: true, //change to select for a dropdown
       children: shifts.map((shift) => (

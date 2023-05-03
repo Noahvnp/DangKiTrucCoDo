@@ -164,7 +164,7 @@ export const deleteRegisterUser = async (
     });
     dispatch(deleteSuccess(res.data));
   } catch (err) {
-    dispatch(deleteFailure(err.response.data));
+    dispatch(deleteFailure(err.response));
   }
 };
 
